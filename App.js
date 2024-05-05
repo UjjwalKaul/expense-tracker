@@ -8,6 +8,7 @@ import RecentExpenses from '../expense-tracker/screens/RecentExpenses';
 import AllExpenses from '../expense-tracker/screens/AllExpenses';
 import { GlobalStyles } from './styles';
 import { Ionicons } from '@expo/vector-icons';
+import IconButton from './components/UI/IconButton';
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
 
@@ -19,6 +20,16 @@ function ExpensesOverview() {
         headerTintColor: 'white',
         tabBarStyle: { backgroundColor: GlobalStyles.colors.primary500 },
         tabBarActiveTintColor: GlobalStyles.colors.accent500,
+        headerRight: ({ tintColor }) => {
+          return (
+            <IconButton
+              icon="add"
+              color={tintColor}
+              size={24}
+              onPress={() => {}}
+            />
+          );
+        },
       }}>
       <BottomTabs.Screen
         name="RecentExpenses"
