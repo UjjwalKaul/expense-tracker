@@ -69,6 +69,7 @@ export default function ExpenseForm({
       <View style={styles.fieldContainer}>
         <Input
           label="Amount"
+          invalid={!inputs.amount.isValid}
           textInputConfig={{
             keyboardType: 'number-pad',
             onChangeText: inputChangeHandler.bind(this, 'amount'),
@@ -78,6 +79,7 @@ export default function ExpenseForm({
         />
         <Input
           label="Date"
+          invalid={!inputs.date.isValid}
           textInputConfig={{
             placeholder: 'DD-MM-YYYY',
             maxLength: 10,
@@ -90,6 +92,7 @@ export default function ExpenseForm({
 
       <Input
         label="Description"
+        invalid={!inputs.description.isValid}
         textInputConfig={{
           multiline: true,
           //   autoCorrect: false,
@@ -98,7 +101,9 @@ export default function ExpenseForm({
         }}
       />
       {formIsInvalid && (
-        <Text>Invalid Input Values - Please check entered data</Text>
+        <Text style={styles.errorText}>
+          Invalid Input Values - Please check entered data
+        </Text>
       )}
       <View style={styles.buttons}>
         <Button onPress={sumbitHandler} style={styles.button}>
@@ -138,5 +143,10 @@ const styles = StyleSheet.create({
   button: {
     minWidth: 120,
     marginHorizontal: 8,
+  },
+  errorText: {
+    textAlign: 'center',
+    color: 'red',
+    margin: 8,
   },
 });
