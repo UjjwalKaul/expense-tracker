@@ -2,7 +2,6 @@ import { StyleSheet, View } from 'react-native';
 import React, { useContext, useLayoutEffect } from 'react';
 import IconButton from '../components/UI/IconButton';
 import { GlobalStyles } from '../styles';
-import Button from '../components/UI/Button';
 import { ExpensesContext } from '../store/expense-context';
 import ExpenseForm from '../components/ExpenseForm';
 
@@ -10,6 +9,10 @@ export default function ManageExpense({ route, navigation }) {
   const expensesCtx = useContext(ExpensesContext);
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
+
+  const selectedExpense = expensesCtx.expenses.find((expense) => {
+    return expense.id === editedExpenseId;
+  });
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -38,6 +41,7 @@ export default function ManageExpense({ route, navigation }) {
         onCancel={cancelHandler}
         sumbitButtonLabel={isEditing ? 'Update' : 'Add'}
         onSubmit={confirmHandler}
+        defaultValues={selectedExpense}
       />
       {isEditing && (
         <View style={styles.deleteContainer}>
