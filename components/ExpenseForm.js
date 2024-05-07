@@ -9,14 +9,14 @@ export default function ExpenseForm() {
       <Input
         label="Amount"
         textInputConfig={{
-          keyboardType: 'decimal-pad',
+          keyboardType: 'number-pad',
           onChangeText: amountChangeHandler,
         }}
       />
       <Input
         label="Date"
         textInputConfig={{
-          placholder: 'YYYY-MM-DD',
+          placeholder: 'YYYY-MM-DD',
           maxLength: 10,
           onChangeText: () => {},
         }}
