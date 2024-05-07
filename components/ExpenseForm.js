@@ -14,7 +14,14 @@ export default function ExpenseForm({ onCancel, onSubmit, sumbitButtonLabel }) {
     });
   }
 
-  function sumbitHandler() {}
+  function sumbitHandler() {
+    const expenseData = {
+      amount: +inputValues.amount,
+      date: new Date(inputValues.date),
+      description: inputValues.description,
+    };
+    onSubmit(expenseData);
+  }
   return (
     <View style={styles.form}>
       <Text style={styles.title}>Your Expense</Text>
@@ -50,7 +57,7 @@ export default function ExpenseForm({ onCancel, onSubmit, sumbitButtonLabel }) {
         }}
       />
       <View style={styles.buttons}>
-        <Button onPress={onSubmit} style={styles.button}>
+        <Button onPress={sumbitHandler} style={styles.button}>
           {sumbitButtonLabel}
         </Button>
         <Button mode="flat" style={styles.button} onPress={onCancel}>
