@@ -9,32 +9,60 @@ export default function ExpenseForm({
   sumbitButtonLabel,
   defaultValues,
 }) {
-  const [inputValues, setInputValues] = useState({
-    amount: defaultValues ? defaultValues.amount.toString() : '',
-    date: defaultValues ? getFormattedDate(defaultValues.date) : '',
-    description: defaultValues ? defaultValues.description : '',
+  const [inputs, setInputs] = useState({
+    amount: {
+      value: defaultValues ? defaultValues.amount.toString() : '',
+      isValid: true,
+    },
+    date: {
+      value: defaultValues ? getFormattedDate(defaultValues.date) : '',
+      isValid: true,
+    },
+    description: {
+      value: defaultValues ? defaultValues.description : '',
+      isValid: true,
+    },
   });
   function inputChangeHandler(inputIdentifier, enteredValue) {
-    setInputValues((currState) => {
-      return { ...currState, [inputIdentifier]: enteredValue };
+    setInputs((currState) => {
+      return {
+        ...currState,
+        [inputIdentifier]: { value: enteredValue, isValid: true },
+      };
     });
   }
 
   function sumbitHandler() {
     const expenseData = {
-      amount: +inputValues.amount,
-      date: new Date(inputValues.date),
-      description: inputValues.description,
+      amount: +inputs.amount.value,
+      date: new Date(inputs.date.value),
+      description: inputs.description.value,
     };
     const amountIsValid = !isNaN(expenseData.amount) && expenseData.amount > 0;
     const dateIsValid = expenseData.date.toString() !== 'Invalid Date';
     const descIsValid = expenseData.description.trim().length > 0;
     if (!amountIsValid || !dateIsValid || !descIsValid) {
-      Alert.alert('Invalid Input', 'Please check your inputs');
+      //   Alert.alert('Invalid Input', 'Please check your inputs');
+      setInputs((currState) => {
+        return {
+          amount: { value: currState.amount.value, isValid: amountIsValid },
+          date: { value: currState.date.value, isValid: dateIsValid },
+          description: {
+            value: currState.description.value,
+            isValid: descIsValid,
+          },
+        };
+      });
       return;
     }
     onSubmit(expenseData);
   }
+
+  const formIsInvalid =
+    !inputs.amount.isValid ||
+    !inputs.date.isValid ||
+    !inputs.description.isValid;
+
   return (
     <View style={styles.form}>
       <Text style={styles.title}>Your Expense</Text>
@@ -44,7 +72,7 @@ export default function ExpenseForm({
           textInputConfig={{
             keyboardType: 'number-pad',
             onChangeText: inputChangeHandler.bind(this, 'amount'),
-            value: inputValues.amount,
+            value: inputs.amount.value,
           }}
           style={styles.rowInput}
         />
@@ -54,7 +82,7 @@ export default function ExpenseForm({
             placeholder: 'DD-MM-YYYY',
             maxLength: 10,
             onChangeText: inputChangeHandler.bind(this, 'date'),
-            value: inputValues.date,
+            value: inputs.date.value,
           }}
           style={styles.rowInput}
         />
@@ -66,9 +94,12 @@ export default function ExpenseForm({
           multiline: true,
           //   autoCorrect: false,
           onChangeText: inputChangeHandler.bind(this, 'description'),
-          value: inputValues.description,
+          value: inputs.description.value,
         }}
       />
+      {formIsInvalid && (
+        <Text>Invalid Input Values - Please check entered data</Text>
+      )}
       <View style={styles.buttons}>
         <Button onPress={sumbitHandler} style={styles.button}>
           {sumbitButtonLabel}
