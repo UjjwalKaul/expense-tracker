@@ -1,9 +1,11 @@
+// https://expense-tracker-3842a-default-rtdb.asia-southeast1.firebasedatabase.app/
 import { StyleSheet, View } from 'react-native';
 import React, { useContext, useLayoutEffect } from 'react';
 import IconButton from '../components/UI/IconButton';
 import { GlobalStyles } from '../styles';
 import { ExpensesContext } from '../store/expense-context';
 import ExpenseForm from '../components/ExpenseForm';
+import storeExpense from '../util/http';
 
 export default function ManageExpense({ route, navigation }) {
   const expensesCtx = useContext(ExpensesContext);
@@ -32,6 +34,7 @@ export default function ManageExpense({ route, navigation }) {
       expensesCtx.updateExpense(editedExpenseId, expenseData);
     } else {
       expensesCtx.addExpense(expenseData);
+      storeExpense(expenseData);
     }
     navigation.goBack();
   }
