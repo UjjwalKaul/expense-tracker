@@ -81,6 +81,7 @@ export default function ExpenseForm({
           label="Date"
           invalid={!inputs.date.isValid}
           textInputConfig={{
+            keyboardType: 'number-pad',
             placeholder: 'YYYY-MM-DD',
             maxLength: 10,
             onChangeText: inputChangeHandler.bind(this, 'date'),
