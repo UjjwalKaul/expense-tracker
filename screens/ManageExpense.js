@@ -1,13 +1,14 @@
-// https://expense-tracker-3842a-default-rtdb.asia-southeast1.firebasedatabase.app/
 import { StyleSheet, View } from 'react-native';
-import React, { useContext, useLayoutEffect } from 'react';
+import React, { useContext, useLayoutEffect, useState } from 'react';
 import IconButton from '../components/UI/IconButton';
 import { GlobalStyles } from '../styles';
 import { ExpensesContext } from '../store/expense-context';
 import ExpenseForm from '../components/ExpenseForm';
 import storeExpense, { updateExpense, deleteExpense } from '../util/http';
+import Loading from '../components/UI/Loading';
 
 export default function ManageExpense({ route, navigation }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const expensesCtx = useContext(ExpensesContext);
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
@@ -23,14 +24,16 @@ export default function ManageExpense({ route, navigation }) {
   }, [navigation, isEditing]);
 
   async function deleteExpenseHandler() {
-    expensesCtx.deleteExpense(editedExpenseId);
+    setIsSubmitting(true);
     await deleteExpense(editedExpenseId);
+    expensesCtx.deleteExpense(editedExpenseId);
     navigation.goBack();
   }
   function cancelHandler() {
     navigation.goBack();
   }
   async function confirmHandler(expenseData) {
+    setIsSubmitting(true);
     if (isEditing) {
       expensesCtx.updateExpense(editedExpenseId, expenseData);
       await updateExpense(editedExpenseId, expenseData);
@@ -39,6 +42,10 @@ export default function ManageExpense({ route, navigation }) {
       expensesCtx.addExpense({ ...expenseData, id: id });
     }
     navigation.goBack();
+  }
+
+  if (isSubmitting) {
+    return <Loading />;
   }
   return (
     <View style={styles.container}>
